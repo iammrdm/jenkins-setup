@@ -6,27 +6,43 @@ pipeline {
             steps {
                 git branch: 'main',
                     url: 'https://github.com/iammrdm/jenkins-setup.git'
+                sh 'ls -laht'
             }
         }
 
-        stage('Check Terraform Versions') {
+        stage('Deploy VPC') {
             steps {
-                echo 'Checking versions'
                 // Add your build steps here
+                echo 'Checking Terraform version and install if necessary'
+                sh 'cd assestment-infra/vpc; bash ../../scripts/tfcheck.sh'
             }
         }
 
-        stage('Test') {
+        stage('Create Security Groups') {
             steps {
-                echo 'Testing...'
-                // Add your test steps here
+                // Add your build steps here
+                echo 'Checking Terraform version and install if necessary'
             }
         }
 
-        stage('Deploy') {
+        stage('Deploy EC2 Instance') {
             steps {
-                echo 'Deploying...'
-                // Add your deployment steps here
+                // Add your build steps here
+                echo 'Checking Terraform version and install if necessary'
+            }
+        }
+
+        stage('Create S3 Bucket') {
+            steps {
+                // Add your build steps here
+                echo 'Checking Terraform version and install if necessary'
+            }
+        }
+
+        stage('Deploy ALB') {
+            steps {
+                // Add your build steps here
+                echo 'Checking Terraform version and install if necessary'
             }
         }
     }
