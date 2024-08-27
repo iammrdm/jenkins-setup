@@ -8,10 +8,10 @@ deploy() {
     terraform init
 
     # run terraform plan and save it
-    terraform plan -out tfplan.out
+    terraform plan -out tfplan.plan
 
     # run terraform apply with auto-approve
-    terraform apply "tfplan.out" --auto-approve
+    terraform apply "tfout.plan" --auto-approve
 }
 
 destroy() {
@@ -19,10 +19,10 @@ destroy() {
     terraform init
 
     # run terraform plan and save it
-    terraform plan -destroy -out tfplan.out
+    terraform plan -destroy -out tfplan.plan
 
     # run terraform apply with auto-approve
-    # terraform destroy "tfplan.out" --auto-approve
+    # terraform destroy "tfplan.plan" --auto-approve
 }
 
 case $action in
