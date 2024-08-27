@@ -11,7 +11,7 @@ deploy() {
     terraform plan -out tfplan.out
 
     # run terraform apply with auto-approve
-    # terraform apply "tfplan.out" --auto-approve
+    terraform apply "tfplan.out" --auto-approve
 }
 
 destroy() {
@@ -19,7 +19,7 @@ destroy() {
     terraform init
 
     # run terraform plan and save it
-    terraform plan -out tfplan.out
+    terraform plan -destroy -out tfplan.out
 
     # run terraform apply with auto-approve
     # terraform destroy "tfplan.out" --auto-approve
@@ -37,6 +37,7 @@ case $action in
     destroy
     ;;
   *)
+    # Usage
     echo "Usage: $0 {deploy|destroy}"
     exit 1
     ;;
