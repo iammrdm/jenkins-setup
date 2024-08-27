@@ -11,7 +11,7 @@ pipeline {
                     try {
                         // Clone the specified Git repository branch ('main') into the workspace
                         checkout([
-                            $class: 'GitSCM', branches: [[name: '*/main']], 
+                            $class: 'GitSCM', branches: [[name: '*/main']], // Update */main to your specific branch to be use
                             doGenerateSubmoduleConfigurations: false, 
                             extensions: [], 
                             submoduleCfg: [], 
@@ -29,7 +29,7 @@ pipeline {
             steps {
                 withCredentials([[
                     $class: 'AmazonWebServicesCredentialsBinding',
-                    credentialsId: '8f96ea23-bd31-4799-b033-9833a3ed72ba' // Replace with your AWS credentials ID
+                    credentialsId: '8f96ea23-bd31-4799-b033-9833a3ed72ba' // Replace with your AWS credentials ID that is setup on Jenkins CI/CD
                 ]]) {
                     script {
                         try {
@@ -59,7 +59,7 @@ pipeline {
                     try {
                         echo "Configuring terraform with required version"
                         
-                        // Run a script to check and configure the required Terraform version
+                        // Run the script(tfcheck.sh) to check and configure the required Terraform version
                         sh 'cd assestment-infra-modular && bash ../scripts/tfcheck.sh'
                     } catch (Exception e) {
                         // If Terraform configuration fails, the pipeline will stop with an error message
@@ -78,7 +78,7 @@ pipeline {
             steps {
                 script {
                     try {
-                        // Execute the deployment script to deploy the infrastructure
+                        // Execute the deployment script to deploy the infrastructure, this will run the terraform commands such as terraform init, terrform plan and terraform apply --auto-approve
                         sh 'cd assestment-infra-modular && bash ../scripts/deployment.sh deploy'
                     } catch (Exception e) {
                         // If deployment fails, the pipeline will stop with an error message
@@ -97,7 +97,7 @@ pipeline {
             steps {
                 script {
                     try {
-                        // Execute the deployment script to destroy the infrastructure
+                        // Execute the deployment script to destroy the infrastructure, this will run the terraform commands such as terraform init, terrform plan -destory and terraform destroy --auto-approve
                         sh 'cd assestment-infra-modular && bash ../scripts/deployment.sh destroy'
                     } catch (Exception e) {
                         // If destruction fails, the pipeline will stop with an error message
@@ -110,16 +110,16 @@ pipeline {
 
     post {
         always {
-            // Always perform cleanup after pipeline execution, regardless of success or failure
+            // Always perform cleanup of workspace after pipeline execution, regardless of success or failure, to save space on the disk
             echo 'Performing cleanup...'
             cleanWs()  // Clean up the workspace
         }
         success {
-            // If the pipeline succeeds, log success message (can add notifications here)
+            // If the deployment succeeds, log success message (can add notifications here)
             echo 'Pipeline succeeded.' 
         }
         failure {
-            // If the pipeline fails, log failure message (can add notifications here)
+            // If the deployment fails, log failure message (can add notifications here)
             echo 'Pipeline failed.' 
         }
     }
