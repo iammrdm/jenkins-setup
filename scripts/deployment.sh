@@ -18,10 +18,11 @@ destroy() {
     # run terraform init
     terraform init
 
-    # run terraform plan and save it
+    # run terraform plan -destroy and save it
     terraform plan -destroy
-    # run terraform apply with auto-approve
-    # terraform destroy --auto-approve
+    
+    # run terraform destroy with auto-approve
+    terraform destroy --auto-approve
 }
 
 case $action in
