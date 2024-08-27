@@ -2,7 +2,7 @@
 resource "aws_instance" "this" {
   ami                         = var.ami
   instance_type               = var.instance_type
-  subnet_id                   = var.subnet_ids[0]  # Only the first subnet ID used for now
+  subnet_id                   = var.subnet_ids[0] # Only the first subnet ID used for now
   security_groups             = [var.security_group_id]
   associate_public_ip_address = true
 

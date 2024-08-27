@@ -1,10 +1,10 @@
 locals {
-    alb_tg_name           = var.alb_tg_name
-    alb_name              = var.alb_name
-    alb_security_group_name = var.alb_security_group_name
+  alb_tg_name             = var.alb_tg_name
+  alb_name                = var.alb_name
+  alb_security_group_name = var.alb_security_group_name
 
-    # Define common tags
-    common_tags = var.common_tags
+  # Define common tags
+  common_tags = var.common_tags
 }
 
 # Define a security group for the ALB

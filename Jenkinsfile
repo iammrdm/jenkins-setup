@@ -1,50 +1,76 @@
 pipeline {
-    agent any
+    agent {
+        label 'local' // Replace with your default agent label
+    }
 
     stages {
-        stage('Clone Repository') {
+       stage('Clone Repository') {
             steps {
-                git branch: 'main',
-                    url: 'https://github.com/iammrdm/jenkins-setup.git'
-                sh 'ls -laht'
+                // Checkout code from the repository
+                 checkout([
+                    $class: 'GitSCM', branches: [[name: '*/main']], 
+                        doGenerateSubmoduleConfigurations: false, 
+                        extensions: [], 
+                        submoduleCfg: [], 
+                    userRemoteConfigs: [[url: 'https://github.com/iammrdm/jenkins-setup.git']], // Replace with your repository URL
+                ])
             }
         }
 
-        stage('Deploy VPC') {
+
+        stage('Configure AWS') {
             steps {
-                // Add your build steps here
-                echo 'Checking Terraform version and install if necessary'
-                sh 'cd assestment-infra/vpc; bash ../../scripts/tfcheck.sh'
+                withCredentials([[
+                    $class: 'AmazonWebServicesCredentialsBinding',
+                    credentialsId: '8f96ea23-bd31-4799-b033-9833a3ed72ba' // Replace with your AWS credentials ID
+                ]]) {
+                    script {
+                        echo "Configuring AWS CLI"
+                        
+                        //  AWS CLI with the credentials and region
+                        sh '''
+                            aws configure set aws_access_key_id ${AWS_ACCESS_KEY_ID}
+                            aws configure set aws_secret_access_key ${AWS_SECRET_ACCESS_KEY}
+                            aws configure set default.region ap-southeast-1
+                        '''
+                        
+                        //  AWS CLI command to verify configuration
+                        sh 'aws sts get-caller-identity'
+                    }
+                }
             }
         }
 
-        stage('Create Security Groups') {
+        stage('Configure and setup Terraform') {
             steps {
-                // Add your build steps here
-                echo 'Checking Terraform version and install if necessary'
+                script {
+                    echo "Configuring terraform with required version"
+                    sh 'cd assestment-infra-modular && bash ../scripts/tfcheck.sh'
+                }
             }
         }
 
-        stage('Deploy EC2 Instance') {
+        stage('Deploy') { // Deployment
             steps {
-                // Add your build steps here
-                echo 'Checking Terraform version and install if necessary'
+                script {
+                    sh 'bash scripts/deployment.sh deploy'
+                }
+            }
+        }
+// Conditional stage based on the boolean parameter
+        stage('Destroy Service') {
+            when {
+                expression {
+                    return params.CLEANUP
+                }
+            }
+            steps {
+
+                sh 'bash scripts/deployment.sh destroy'
             }
         }
 
-        stage('Create S3 Bucket') {
-            steps {
-                // Add your build steps here
-                echo 'Checking Terraform version and install if necessary'
-            }
-        }
-
-        stage('Deploy ALB') {
-            steps {
-                // Add your build steps here
-                echo 'Checking Terraform version and install if necessary'
-            }
-        }
+        
     }
 
     post {

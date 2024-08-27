@@ -35,21 +35,23 @@ module "ec2" {
   source            = "./modules/ec2"
   ami               = "ami-012c2e8e24e2ae21d" # Replace with your desired AMI ID
   instance_type     = "t2.micro"
-  subnet_ids         = data.terraform_remote_state.assestment_infra_vpc.outputs.public_subnet_ids
-  security_group_id = data.terraform_remote_state.assestment_infra_vpc.outputs.security_group_id
+    subnet_ids = module.vpc.public_subnet_ids
+    security_group_id =  module.vpc.security_group_id
   key_name          = "laboratory_dev"
   tags = merge(local.common_tags, {
     Name = "assestment-infra-ec2"
   })
+  depends_on = [module.vpc]
 }
 
 module "alb" {
   source = "./modules/alb"
 
-  alb_tg_name           = "assestment-infra-app-tg"
-  alb_name              = "assestment-infra-app-alb"
+  alb_tg_name             = "assestment-infra-app-tg"
+  alb_name                = "assestment-infra-app-alb"
   alb_security_group_name = "assestment-infra-alb-sg"
-  common_tags           = local.common_tags
-  vpc_id          = data.terraform_remote_state.assestment_infra_vpc.outputs.vpc_id
-  subnets         = data.terraform_remote_state.assestment_infra_vpc.outputs.public_subnet_ids
+  common_tags             = local.common_tags
+vpc_id =  module.vpc.vpc_id
+subnets =  module.vpc.public_subnet_ids
+  depends_on = [module.vpc]
 }
