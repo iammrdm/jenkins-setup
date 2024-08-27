@@ -44,6 +44,7 @@ if terraform fmt -check -recursive; then
     echo "All Terraform files are properly formatted."
 else
     echo "Some Terraform files need formatting. Running terraform fmt..."
+    echo "Please run the terraform fmt -recursive and commit the changes."
     terraform fmt -recursive
 
     if [ $? -eq 0 ]; then
