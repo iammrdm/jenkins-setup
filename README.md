@@ -42,22 +42,32 @@
 
 ### How to use?
 
-- Clone this repository: 
+- Clone this repository:  
 `git clone https://github.com/iammrdm/jenkins-setup.git` 
 
 - You have 2 options:
     - Run Directly on the folder:
-        - Go to the folder `cd assestment-infra-modular`
-        - Run the script to check tf version and installed the required version: `bash ../scripts/tfcheck.sh`
-        - Initialize the terraform: `terraform init`
-        - Plan the terraform and save it: `terraform plan -out tfplan.out`
-        - Apply the terraform: `terraform apply tfplan.out --auto-approve`
-        - To destroy the services after testing: `terraform destroy tfplan.out --auto-approve`
+        - Go to the folder  
+        `cd assestment-infra-modular`
+        - Run the script to check tf version and installed the required version:  
+        `bash ../scripts/tfcheck.sh`
+        - Initialize the terraform:  
+        `terraform init`
+        - Plan the terraform and save it:  
+        `terraform plan -out tfplan.out`
+        - Apply the terraform:  
+        `terraform apply tfplan.out --auto-approve`
+        - To destroy the services after testing:  
+        `terraform destroy tfplan.out --auto-approve`
     - Run the deployment script inside the folder:
-        - Go to the folder `cd assestment-infra-modular`
-        - Run the script to check tf version and installed the required version: `bash ../scripts/tfcheck.sh`
-        - Run the deployment script to deploy the services `bash ../scripts/deployment.sh deploy`
-        - Run the deployment script to destroy the services after testing:  `bash ../scripts/deployment.sh destroy`
+        - Go to the folder  
+        `cd assestment-infra-modular`
+        - Run the script to check tf version and installed the required version:  
+        `bash ../scripts/tfcheck.sh`
+        - Run the deployment script to deploy the services  
+        `bash ../scripts/deployment.sh deploy`
+        - Run the deployment script to destroy the services after testing:  
+        `bash ../scripts/deployment.sh destroy`
 
 ### Definition
 - assestment-infra-modular: Contains the terraform files
