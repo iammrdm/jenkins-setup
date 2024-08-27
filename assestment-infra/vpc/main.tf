@@ -10,6 +10,7 @@ locals {
   private_subnet_name     = "private-subnet"
   igw_name                = "assestment-infra-igw"
   public_route_table_name = "assestment-infra-public-route-table"
+  availability_zones      = ["ap-southeast-1a", "ap-southeast-1b"]
 
   # Define common tags
   common_tags = {
@@ -32,6 +33,7 @@ resource "aws_vpc" "main" {
 resource "aws_subnet" "public" {
   for_each                = { for idx, cidr in local.public_subnet_cidr : idx => cidr }
   cidr_block              = each.value
+  availability_zone       = local.availability_zones[each.key]
   vpc_id                  = aws_vpc.main.id
   map_public_ip_on_launch = true
 
@@ -42,9 +44,10 @@ resource "aws_subnet" "public" {
 
 # Create a private subnet
 resource "aws_subnet" "private" {
-  for_each   = { for idx, cidr in local.private_subnet_cidr : idx => cidr }
-  cidr_block = each.value
-  vpc_id     = aws_vpc.main.id
+  for_each          = { for idx, cidr in local.private_subnet_cidr : idx => cidr }
+  cidr_block        = each.value
+  availability_zone = local.availability_zones[each.key]
+  vpc_id            = aws_vpc.main.id
 
   tags = merge(local.common_tags, {
     Name = "private-subnet-${each.key + 1}"
