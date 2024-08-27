@@ -2,9 +2,6 @@
 
 action=${1}
 
-# Going inside the directory
-cd ../assestment-infra-modular
-
 # Functions 
 deploy() {
     # run terraform init
