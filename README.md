@@ -3,6 +3,7 @@
 
 ---
 # Directory Structure
+```bash
 .
 ├── Jenkinsfile
 ├── README.md
@@ -29,8 +30,9 @@
 │   ├── outputs.tf
 │   └── providers.tf
 └── scripts
-    └── tfcheck.sh
+    ├── tfcheck.sh
     └── deployment.sh
+```
 
 ### Prerequisites
 - AWS CLI on local or on Jenkins agent
@@ -63,4 +65,5 @@
 - Jenkinsfile: The pipeline script
 - scripts: Contains the scripts used on this project
     - tfcheck.sh: this will check the terraform if it is installed or not, and will check the terraform required version on the providers.tf and use it as a default version.
-    - deployment.sh: this will deploy services and/or destroy the services after testing. `Usage: ./scripts/deployment.sh {deploy|destroy}`
+    - deployment.sh: this will deploy services and/or destroy the services after testing.  
+    `Usage: ./scripts/deployment.sh {deploy|destroy}`
