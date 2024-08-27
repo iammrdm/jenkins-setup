@@ -35,23 +35,24 @@
 ```
 
 ### Prerequisites
-- AWS CLI on local or on Jenkins agent
-- AWS Access Key configured with the appropriate permissions
-- Terraform installed on your local machine or on Jenkins Agent
-- Jenkins installed on the EC2 instance or local required for ci/cd
+- AWS CLI(https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) on local or on Jenkins agent.
+- AWS Access Key configured with the appropriate permissions.
+- Terraform installed on your local machine or on Jenkins Agent.
+- Jenkins installed on the EC2 instance or local required for ci/cd.
 
 
 ### Definition
-- assestment-infra-modular: Contains the terraform files
-- assestment-infra-modular/modules: Contains the modules(VPC, EC2, ALB, S3) used on this project
-- Jenkinsfile: The pipeline script
-- scripts: Contains the scripts used on this project
+- assestment-infra-modular: Contains the terraform files.
+- assestment-infra-modular/modules: Contains the modules(VPC, EC2, ALB, S3) used on this project.
+- Jenkinsfile: The pipeline script.
+- scripts: Contains the scripts used on this project.
     - tfcheck.sh: this will check the terraform if it is installed or not, and will check the terraform required version on the providers.tf and use it as a default version.
     - deployment.sh: this will deploy services and/or destroy the services after testing.  
     `Usage: ./scripts/deployment.sh {deploy|destroy}`
 
 ### How to use?
 
+#### Manual Usage
 - Clone this repository:  
 `git clone https://github.com/iammrdm/jenkins-setup.git` 
 
@@ -78,3 +79,11 @@
         `bash ../scripts/deployment.sh deploy`
         - Run the deployment script to destroy the services after testing:  
         `bash ../scripts/deployment.sh destroy`
+
+#### Pipeline Usage
+- Make sure you install the parameterize pipeline plugins if its not installed.
+- Create a new pipeline on your Jenkins Server (CI/CD).
+- Add a boolean parameter name: `CLEANUP`, this will determine if it will deploy or destory.
+- You have two options to use the Jenkinsfile:
+    - First Option: Copy the contents of `Jenkinsfile` on <b>Pipeline -> Definition -> Pipeline Script</b>.
+    - Second Option: Use the GIT option <b>Pipeline -> Definition -> Pipeline Script from SCM -> SCM(GIT) -> Repository URL(https://github.com/iammrdm/jenkins-setup.git) -> Credentials(if any) -> Branch(main) -> Script Path(Jenkinsfile)</b>.
