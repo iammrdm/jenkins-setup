@@ -5,12 +5,12 @@ output "vpc_id" {
 
 # Output the public subnet ID
 output "public_subnet_id" {
-  value = aws_subnet.public.*.id
+  value = [for s in aws_subnet.public : s.id]
 }
 
 # Output the private subnet ID
 output "private_subnet_id" {
-  value = aws_subnet.private.*.id
+  value = [for s in aws_subnet.private : s.id]
 }
 
 # Output the Internet Gateway ID

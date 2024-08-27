@@ -1,8 +1,8 @@
 locals {
   # Define common CIDR blocks
   vpc_cidr            = "10.0.0.0/16"
-  public_subnet_cidr  = "10.0.1.0/24"
-  private_subnet_cidr = "10.0.2.0/24"
+  public_subnet_cidr  = ["10.0.1.0/24", "10.0.3.0/24"]
+  private_subnet_cidr = ["10.0.2.0/24", "10.0.4.0/24"]
 
   # Define common names
   vpc_name                = "assestment-infra"
@@ -10,7 +10,7 @@ locals {
   private_subnet_name     = "private-subnet"
   igw_name                = "assestment-infra-igw"
   public_route_table_name = "assestment-infra-public-route-table"
-  
+
   # Define common tags
   common_tags = {
     Environment = "assestment"
@@ -30,22 +30,24 @@ resource "aws_vpc" "main" {
 
 # Create a public subnet
 resource "aws_subnet" "public" {
+  for_each                = { for idx, cidr in local.public_subnet_cidr : idx => cidr }
+  cidr_block              = each.value
   vpc_id                  = aws_vpc.main.id
-  cidr_block              = local.public_subnet_cidr
   map_public_ip_on_launch = true
 
   tags = merge(local.common_tags, {
-    Name = local.public_subnet_name
+    Name = "public-subnet-${each.key + 1}"
   })
 }
 
 # Create a private subnet
 resource "aws_subnet" "private" {
+  for_each   = { for idx, cidr in local.private_subnet_cidr : idx => cidr }
+  cidr_block = each.value
   vpc_id     = aws_vpc.main.id
-  cidr_block = local.private_subnet_cidr
 
   tags = merge(local.common_tags, {
-    Name = local.private_subnet_name
+    Name = "private-subnet-${each.key + 1}"
   })
 }
 
@@ -74,6 +76,7 @@ resource "aws_route_table" "public" {
 
 # Associate the route table with the public subnet
 resource "aws_route_table_association" "a" {
-  subnet_id      = aws_subnet.public.id
+  for_each       = aws_subnet.public
+  subnet_id      = each.value.id
   route_table_id = aws_route_table.public.id
 }
