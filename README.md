@@ -40,6 +40,16 @@
 - Terraform installed on your local machine or on Jenkins Agent
 - Jenkins installed on the EC2 instance or local required for ci/cd
 
+
+### Definition
+- assestment-infra-modular: Contains the terraform files
+- assestment-infra-modular/modules: Contains the modules(VPC, EC2, ALB, S3) used on this project
+- Jenkinsfile: The pipeline script
+- scripts: Contains the scripts used on this project
+    - tfcheck.sh: this will check the terraform if it is installed or not, and will check the terraform required version on the providers.tf and use it as a default version.
+    - deployment.sh: this will deploy services and/or destroy the services after testing.  
+    `Usage: ./scripts/deployment.sh {deploy|destroy}`
+
 ### How to use?
 
 - Clone this repository:  
@@ -68,12 +78,3 @@
         `bash ../scripts/deployment.sh deploy`
         - Run the deployment script to destroy the services after testing:  
         `bash ../scripts/deployment.sh destroy`
-
-### Definition
-- assestment-infra-modular: Contains the terraform files
-- assestment-infra-modular/modules: Contains the modules(VPC, EC2, ALB, S3) used on this project
-- Jenkinsfile: The pipeline script
-- scripts: Contains the scripts used on this project
-    - tfcheck.sh: this will check the terraform if it is installed or not, and will check the terraform required version on the providers.tf and use it as a default version.
-    - deployment.sh: this will deploy services and/or destroy the services after testing.  
-    `Usage: ./scripts/deployment.sh {deploy|destroy}`
